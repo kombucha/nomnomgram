@@ -15,3 +15,8 @@ export interface GuideSquare {
   consecutive: boolean;
   state: GuideState;
 }
+
+export interface Position {
+  x: number;
+  y: number;
+}

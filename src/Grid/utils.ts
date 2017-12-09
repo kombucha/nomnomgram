@@ -1,12 +1,12 @@
 import { Guide, GuideState, GuideSquare } from "./types";
 
-function range(start: number, end: number): Array<number> {
+function range(start: number, end: number): number[] {
   return Array(end - start)
     .fill(undefined)
     .map((_, idx) => start + idx);
 }
 
-function generateRowGuide(row: Array<number>, colorsNb: number): Array<GuideSquare> {
+function generateRowGuide(row: number[], colorsNb: number): Array<GuideSquare> {
   const colorStats = range(0, colorsNb).map(color => ({
     startIndex: -1,
     endIndex: -1,
@@ -40,15 +40,14 @@ function generateRowGuide(row: Array<number>, colorsNb: number): Array<GuideSqua
   }));
 }
 
-export function transpose<T>(matrix: Array<Array<T>>): Array<Array<T>> {
+export function transpose<T>(matrix: T[][]): T[][] {
   return matrix.reduce(
-    (prev: Array<Array<T>>, next: Array<T>) =>
-      next.map((item, i) => (prev[i] || []).concat(next[i])),
+    (prev: T[][], next: T[]) => next.map((item, i) => (prev[i] || []).concat(next[i])),
     []
   );
 }
 
-export function generateGuide(grid: Array<Array<number>>, colorsNb: number): Guide {
+export function generateGuide(grid: number[][], colorsNb: number): Guide {
   return {
     lines: grid.map(r => generateRowGuide(r, colorsNb)),
     columns: transpose(grid).map(c => generateRowGuide(c, colorsNb)),
