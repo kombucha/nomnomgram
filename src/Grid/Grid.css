@@ -1,0 +1,42 @@
+.Grid {
+  --square-size: 48px;
+  --text-size: 40px;
+  --bg-color: rgb(247, 247, 247);
+  --bg-color-dark: rgb(209, 209, 209);
+
+  table-layout: fixed;
+  background: var(--bg-color);
+  user-select: none;
+}
+
+.Grid__square {
+  position: relative;
+  width: var(--square-size);
+  height: var(--square-size);
+  border: 2px dashed #ccc;
+}
+
+.Grid__square--dark {
+  background: var(--bg-color-dark);
+}
+
+.Grid__square--guide {
+  vertical-align: middle;
+  text-align: center;
+  border: none;
+}
+
+.Grid__count {
+  display: inline-block;
+  width: var(--text-size);
+  height: var(--text-size);
+  font-size: var(--text-size);
+
+  font-weight: bold;
+  text-shadow: 1px 1px #666;
+}
+
+.Grid__count--consecutive {
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+}
