@@ -10,7 +10,7 @@ import { MouseEvent } from "react";
 interface Props {
   grid: number[][];
   colors: string[];
-  guides?: Guide;
+  guide?: Guide;
   onToggleCell?: ((position: Position) => void);
 }
 
@@ -25,7 +25,7 @@ class Grid extends React.PureComponent<Props> {
   }
 
   render() {
-    const { grid, guides } = this.props;
+    const { grid, guide } = this.props;
     return (
       <table
         className="Grid"
@@ -33,9 +33,9 @@ class Grid extends React.PureComponent<Props> {
         onMouseUp={this.handleMouseUp}
         onMouseMove={this.handleMouseMove}>
         <tbody>
-          {guides && this.renderTopGuide(guides.columns)}
+          {guide && this.renderTopGuide(guide.columns)}
           {grid.map((line, idx) =>
-            this.renderLine(idx, line, guides ? guides.lines[idx] : undefined)
+            this.renderLine(idx, line, guide ? guide.lines[idx] : undefined)
           )}
         </tbody>
       </table>

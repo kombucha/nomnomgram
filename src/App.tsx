@@ -33,12 +33,7 @@ class App extends React.PureComponent<object, State> {
 
     return (
       <div className="App">
-        <Grid
-          colors={colors}
-          grid={drawing}
-          guides={guide}
-          onToggleCell={this.handleCellToggling}
-        />
+        <Grid colors={colors} grid={drawing} guide={guide} onToggleCell={this.handleCellToggling} />
         <ColorPicker
           colors={colors}
           selectedColor={colors[currentColorIdx]}
