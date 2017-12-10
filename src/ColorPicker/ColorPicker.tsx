@@ -5,7 +5,7 @@ import "./ColorPicker.css";
 
 interface Props {
   colors: string[];
-  onColorSelected: ((color: string) => void);
+  onColorSelected: ((color?: string) => void);
   selectedColor: string;
 }
 

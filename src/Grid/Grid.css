@@ -1,11 +1,9 @@
 .Grid {
   --square-size: 48px;
   --text-size: 40px;
-  --bg-color: rgb(206, 206, 206);
-  --bg-color-dark: rgb(177, 177, 177);
+  --bg-color-dark: rgba(0, 0, 0, 0.1);
 
   table-layout: fixed;
-  background: var(--bg-color);
   user-select: none;
 }
 

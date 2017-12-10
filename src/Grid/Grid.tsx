@@ -93,7 +93,7 @@ class Grid extends React.PureComponent<Props> {
       <tr key={rowIdx}>
         <th colSpan={colorsNb} />
         {column.map((square, idx) =>
-          this.renderGuideSquare(idx, square, idx % 2 ? DARK_SQUARE_CLASS : "")
+          this.renderGuideSquare(idx, square, idx % 2 ? "" : DARK_SQUARE_CLASS)
         )}
       </tr>
     ));
@@ -134,7 +134,7 @@ class Grid extends React.PureComponent<Props> {
       <tr key={rowIdx}>
         {lineGuide &&
           lineGuide.map((square, idx) =>
-            this.renderGuideSquare(idx, square, rowIdx % 2 ? DARK_SQUARE_CLASS : "")
+            this.renderGuideSquare(idx, square, rowIdx % 2 ? "" : DARK_SQUARE_CLASS)
           )}
         {line.map((color, idx) => this.renderSquare({ x: idx, y: rowIdx }, color))}
       </tr>
