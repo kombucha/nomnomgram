@@ -1,6 +1,7 @@
 .Grid {
   --square-size: 48px;
-  --text-size: 40px;
+  --grid-count-size: 40px;
+  --grid-count-text-size: 28px;
   --bg-color-dark: rgba(0, 0, 0, 0.1);
 
   table-layout: fixed;
@@ -26,9 +27,10 @@
 
 .Grid__count {
   display: inline-block;
-  width: var(--text-size);
-  height: var(--text-size);
-  font-size: var(--text-size);
+  width: var(--grid-count-size);
+  height: var(--grid-count-size);
+  font-size: var(--grid-count-text-size);
+  line-height: var(--grid-count-size);
 
   font-weight: bold;
   text-shadow: 1px 1px #666;

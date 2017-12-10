@@ -2,8 +2,8 @@ import * as classNames from "classnames";
 import { throttle } from "lodash"; // TODO: find import syntax to really import debounce solely...
 import * as React from "react";
 
+import { transpose } from "../../grid.utils";
 import { IGrid, IGuideSquare, IPosition } from "../../models";
-import { transpose } from "./utils";
 
 import "./Grid.css";
 
@@ -29,6 +29,7 @@ class Grid extends React.PureComponent<IProps> {
       <table
         className="Grid"
         onMouseDown={this.handleMouseDown}
+        onMouseLeave={this.handleMouseUp}
         onMouseUp={this.handleMouseUp}
         onMouseMove={this.handleMouseMove}>
         <tbody>

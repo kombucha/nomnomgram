@@ -2,53 +2,72 @@ import * as React from "react";
 
 import ColorPicker from "../../common/ColorPicker";
 import Grid from "../../common/Grid";
-import { generateGuide } from "../../common/Grid/utils";
-import { IGrid, IGuide, IPosition } from "../../models";
+import { generateEmptyDrawing, generateGuide } from "../../grid.utils";
+import { IGrid, IGuide, IPosition, ISize } from "../../models";
 
 import "./Edit.css";
 
+const SIZES: ISize[] = [
+  { width: 5, height: 5 },
+  { width: 5, height: 10 },
+  { width: 10, height: 10 },
+  { width: 10, height: 15 },
+];
+
 interface IState {
   grid: IGrid;
+  selectedSize: number;
   currentColorIdx: number;
 }
 
 class Edit extends React.PureComponent<object, IState> {
   constructor(props: object) {
     super(props);
-    const drawing = [
-      [2, 2, 0, 2, 2],
-      [3, 2, 2, 2, 3],
-      [0, 1, 2, 1, 0],
-      [0, 2, 2, 2, 0],
-      [0, 2, 1, 2, 0],
-    ];
+    const selectedSize = 0;
+    const size = SIZES[selectedSize];
+    const drawing = generateEmptyDrawing(size);
     const colors = ["#fff", "#000", "#b7b7b7", "#ffa3f5"];
     const guide = generateGuide(drawing, colors.length);
 
     // Default grid
     const grid = {
-      name: "",
+      name: "Default name",
       author: "",
       drawing,
       colors,
       guide,
     };
 
-    this.state = { grid, currentColorIdx: 0 };
+    this.state = { grid, selectedSize, currentColorIdx: 0 };
   }
 
   public render() {
-    const { grid, currentColorIdx } = this.state;
+    const { grid, selectedSize, currentColorIdx } = this.state;
     const selectedColor = grid.colors[currentColorIdx];
 
     return (
       <div className="Edit">
         <Grid grid={grid} showGuide={true} onToggleCell={this.handleCellEdit} />
-        <ColorPicker
-          colors={grid.colors}
-          selectedColor={selectedColor}
-          onColorSelected={this.handleColorSelected}
-        />
+        <div className="Edit__controls">
+          <label htmlFor="name">
+            <span>Grid name</span>
+            <input id="name" type="text" value={grid.name} onChange={this.handleNameEdit} />
+          </label>
+          <label htmlFor="size">
+            <select value={selectedSize} onChange={this.handleSizeChange}>
+              {SIZES.map((size, idx) => (
+                <option key={idx} value={idx}>
+                  {size.width} * {size.height}
+                </option>
+              ))}
+            </select>
+          </label>
+          <ColorPicker
+            colors={grid.colors}
+            selectedColor={selectedColor}
+            onColorSelected={this.handleColorSelected}
+          />
+        </div>
       </div>
     );
   }
@@ -56,6 +75,26 @@ class Edit extends React.PureComponent<object, IState> {
   private handleColorSelected = (color: string) => {
     const currentColorIdx = this.state.grid.colors.indexOf(color);
     this.setState({ currentColorIdx });
+  };
+
+  private handleNameEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    const grid = { ...this.state.grid, name };
+    this.setState({ grid });
+  };
+
+  private handleColorChange = () => {
+    console.log("color change");
+  };
+
+  private handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSize = parseInt(e.target.value, 10);
+    const size = SIZES[selectedSize];
+    const drawing = generateEmptyDrawing(size);
+    const guide = generateGuide(drawing, this.state.grid.colors.length);
+    const grid = { ...this.state.grid, drawing, guide };
+
+    this.setState({ grid, selectedSize });
   };
 
   private handleCellEdit = (p: IPosition) => {

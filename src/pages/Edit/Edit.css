@@ -1,0 +1,8 @@
+.Edit {
+  display: flex;
+}
+
+.Edit__controls {
+  display: flex;
+  flex-direction: column;
+}

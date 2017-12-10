@@ -7,12 +7,17 @@ interface IProps {
   color: string;
   selected?: boolean;
   onClick?: ((e: React.MouseEvent<HTMLElement>) => void);
+  children?: any;
 }
 
-const ColorButton = ({ color, selected, onClick }: IProps) => {
+const ColorButton = ({ color, selected, onClick, children }: IProps) => {
   const colorStyle = { backgroundColor: color };
   const classes = classNames("ColorButton", { "ColorButton--selected": selected });
-  return <button className={classes} style={colorStyle} onClick={onClick} />;
+  return (
+    <button className={classes} style={colorStyle} onClick={onClick}>
+      {children}
+    </button>
+  );
 };
 
 export default ColorButton;
