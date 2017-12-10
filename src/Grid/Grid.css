@@ -1,8 +1,8 @@
 .Grid {
   --square-size: 48px;
   --text-size: 40px;
-  --bg-color: rgb(247, 247, 247);
-  --bg-color-dark: rgb(209, 209, 209);
+  --bg-color: rgb(206, 206, 206);
+  --bg-color-dark: rgb(177, 177, 177);
 
   table-layout: fixed;
   background: var(--bg-color);

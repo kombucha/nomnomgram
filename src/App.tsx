@@ -1,12 +1,14 @@
 import * as React from "react";
 
 import Grid, { Position, Guide } from "./Grid";
+import ColorPicker from "./ColorPicker";
 import { generateGuide } from "./Grid/utils";
 import "./App.css";
 
 interface State {
   drawing: number[][];
   colors: string[];
+  currentColorIdx: number;
   guide: Guide;
 }
 
@@ -23,11 +25,11 @@ class App extends React.PureComponent<object, State> {
     const colors = ["#fff", "#000", "#b7b7b7", "#ffa3f5"];
     const guide = generateGuide(drawing, colors.length);
 
-    this.state = { drawing, colors, guide };
+    this.state = { drawing, colors, guide, currentColorIdx: 0 };
   }
 
   render() {
-    const { colors, drawing, guide } = this.state;
+    const { colors, drawing, guide, currentColorIdx } = this.state;
 
     return (
       <div className="App">
@@ -37,18 +39,28 @@ class App extends React.PureComponent<object, State> {
           guides={guide}
           onToggleCell={this.handleCellToggling}
         />
+        <ColorPicker
+          colors={colors}
+          selectedColor={colors[currentColorIdx]}
+          onColorSelected={this.handleColorSelected}
+        />
       </div>
     );
   }
 
+  private handleColorSelected = (color: string) => {
+    const currentColorIdx = this.state.colors.indexOf(color);
+    this.setState({ currentColorIdx });
+  };
+
   private handleCellToggling = (p: Position) => {
-    const { drawing, colors } = this.state;
+    const { drawing, colors, currentColorIdx } = this.state;
     const cellColor = drawing[p.y][p.x];
 
-    const updatedDrawing = drawing.reduce((acc: number[][], row: number[], index) => {
+    const updatedDrawing = drawing.reduce<number[][]>((acc, row, index) => {
       if (index === p.y) {
         const updatedRow = row.slice();
-        updatedRow[p.x] = 3;
+        updatedRow[p.x] = currentColorIdx;
         acc.push(updatedRow);
       } else {
         acc.push(row);

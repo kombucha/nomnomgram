@@ -16,6 +16,11 @@ function generateRowGuide(row: number[], colorsNb: number): Array<GuideSquare> {
 
   for (let i = 0; i < row.length; i++) {
     const colorIdx = row[i];
+
+    if (colorIdx === -1) {
+      continue;
+    }
+
     let colorStat = colorStats[colorIdx];
 
     if (colorStat.startIndex === -1) {

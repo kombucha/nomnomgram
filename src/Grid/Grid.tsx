@@ -59,6 +59,7 @@ class Grid extends React.PureComponent<Props> {
   };
   private handleMouseUp = () => {
     this.mouseDown = false;
+    this.lastPosition = undefined;
   };
 
   private throttledToggleHandler = throttle((cell: HTMLElement) => {

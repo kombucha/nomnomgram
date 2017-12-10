@@ -1,0 +1,8 @@
+.ColorPicker {
+  display: flex;
+  padding: 0.5rem;
+}
+
+.ColorPicker__item:not(:last-child) {
+  margin-right: 1rem;
+}
