@@ -1,4 +1,4 @@
-import { Guide, GuideState, GuideSquare } from "./types";
+import { GuideState, IGuide, IGuideSquare } from "./types";
 
 function range(start: number, end: number): number[] {
   return Array(end - start)
@@ -6,12 +6,12 @@ function range(start: number, end: number): number[] {
     .map((_, idx) => start + idx);
 }
 
-function generateRowGuide(row: number[], colorsNb: number): Array<GuideSquare> {
+function generateRowGuide(row: number[], colorsNb: number): IGuideSquare[] {
   const colorStats = range(0, colorsNb).map(color => ({
-    startIndex: -1,
-    endIndex: -1,
     color,
+    startIndex: -1,
     count: 0,
+    endIndex: -1,
   }));
 
   for (let i = 0; i < row.length; i++) {
@@ -21,7 +21,7 @@ function generateRowGuide(row: number[], colorsNb: number): Array<GuideSquare> {
       continue;
     }
 
-    let colorStat = colorStats[colorIdx];
+    const colorStat = colorStats[colorIdx];
 
     if (colorStat.startIndex === -1) {
       colorStat.startIndex = i;
@@ -52,7 +52,7 @@ export function transpose<T>(matrix: T[][]): T[][] {
   );
 }
 
-export function generateGuide(grid: number[][], colorsNb: number): Guide {
+export function generateGuide(grid: number[][], colorsNb: number): IGuide {
   return {
     lines: grid.map(r => generateRowGuide(r, colorsNb)),
     columns: transpose(grid).map(c => generateRowGuide(c, colorsNb)),

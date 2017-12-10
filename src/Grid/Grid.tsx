@@ -1,30 +1,30 @@
-import * as React from "react";
 import * as classNames from "classnames";
-import { throttle, Cancelable } from "lodash"; // TODO: find import syntax to really import debounce solely...
-import { Position, Guide, GuideSquare } from "./types";
+import * as React from "react";
+
+import { throttle } from "lodash"; // TODO: find import syntax to really import debounce solely...
+import { IGuide, IGuideSquare, IPosition } from "./types";
 import { transpose } from "./utils";
 
 import "./Grid.css";
-import { MouseEvent } from "react";
 
-interface Props {
+interface IProps {
   grid: number[][];
   colors: string[];
-  guide?: Guide;
-  onToggleCell?: ((position: Position) => void);
+  guide?: IGuide;
+  onToggleCell?: ((position: IPosition) => void);
 }
 
 const DARK_SQUARE_CLASS: string = "Grid__square--dark";
 
-class Grid extends React.PureComponent<Props> {
-  private lastPosition?: Position;
+class Grid extends React.PureComponent<IProps> {
+  private lastPosition?: IPosition;
   private mouseDown: boolean = false;
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     this.throttledToggleHandler.cancel();
   }
 
-  render() {
+  public render() {
     const { grid, guide } = this.props;
     return (
       <table
@@ -42,7 +42,7 @@ class Grid extends React.PureComponent<Props> {
     );
   }
 
-  private getPosition(el: HTMLElement): Position | undefined {
+  private getPosition(el: HTMLElement): IPosition | undefined {
     return el.dataset.x
       ? { x: parseInt(el.dataset.x!, 10), y: parseInt(el.dataset.y!, 10) }
       : undefined;
@@ -57,11 +57,13 @@ class Grid extends React.PureComponent<Props> {
     const cell = e.target as HTMLElement;
     this.throttledToggleHandler(cell);
   };
+
   private handleMouseUp = () => {
     this.mouseDown = false;
     this.lastPosition = undefined;
   };
 
+  // tslint:disable-next-line:member-ordering
   private throttledToggleHandler = throttle((cell: HTMLElement) => {
     const currentPosition = this.getPosition(cell);
 
@@ -85,7 +87,7 @@ class Grid extends React.PureComponent<Props> {
     this.throttledToggleHandler(cell);
   };
 
-  private renderTopGuide = (columnGuides: Array<Array<GuideSquare>>) => {
+  private renderTopGuide = (columnGuides: IGuideSquare[][]) => {
     const transposedGuide = transpose(columnGuides);
     const colorsNb = this.props.colors.length;
 
@@ -99,7 +101,7 @@ class Grid extends React.PureComponent<Props> {
     ));
   };
 
-  private renderGuideSquare = (key: number, square: GuideSquare, className: string = "") => {
+  private renderGuideSquare = (key: number, square: IGuideSquare, className: string = "") => {
     const color = this.props.colors[square.colorIndex];
     const colorStyle = { color };
     const squareClass = classNames("Grid__square", "Grid__square--guide", className);
@@ -114,7 +116,7 @@ class Grid extends React.PureComponent<Props> {
     );
   };
 
-  private renderSquare = (position: Position, colorIdx: number) => {
+  private renderSquare = (position: IPosition, colorIdx: number) => {
     const color = this.props.colors[colorIdx];
     const colorStyle = color ? { background: color } : undefined;
 
@@ -129,7 +131,7 @@ class Grid extends React.PureComponent<Props> {
     );
   };
 
-  private renderLine = (rowIdx: number, line: Array<number>, lineGuide?: Array<GuideSquare>) => {
+  private renderLine = (rowIdx: number, line: number[], lineGuide?: IGuideSquare[]) => {
     return (
       <tr key={rowIdx}>
         {lineGuide &&

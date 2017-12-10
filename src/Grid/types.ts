@@ -1,6 +1,6 @@
-export interface Guide {
-  lines: Array<Array<GuideSquare>>;
-  columns: Array<Array<GuideSquare>>;
+export interface IGuide {
+  lines: IGuideSquare[][];
+  columns: IGuideSquare[][];
 }
 
 export enum GuideState {
@@ -9,14 +9,14 @@ export enum GuideState {
   ERROR,
 }
 
-export interface GuideSquare {
+export interface IGuideSquare {
   colorIndex: number;
   count: number;
   consecutive: boolean;
   state: GuideState;
 }
 
-export interface Position {
+export interface IPosition {
   x: number;
   y: number;
 }

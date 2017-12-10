@@ -1,18 +1,19 @@
 import * as React from "react";
 
-import Grid, { Position, Guide } from "./Grid";
 import ColorPicker from "./ColorPicker";
+import Grid, { IGuide, IPosition } from "./Grid";
 import { generateGuide } from "./Grid/utils";
+
 import "./App.css";
 
-interface State {
+interface IState {
   drawing: number[][];
   colors: string[];
   currentColorIdx: number;
-  guide: Guide;
+  guide: IGuide;
 }
 
-class App extends React.PureComponent<object, State> {
+class App extends React.PureComponent<object, IState> {
   constructor(props: object) {
     super(props);
     const drawing = [
@@ -28,7 +29,7 @@ class App extends React.PureComponent<object, State> {
     this.state = { drawing, colors, guide, currentColorIdx: 0 };
   }
 
-  render() {
+  public render() {
     const { colors, drawing, guide, currentColorIdx } = this.state;
 
     return (
@@ -48,7 +49,7 @@ class App extends React.PureComponent<object, State> {
     this.setState({ currentColorIdx });
   };
 
-  private handleCellToggling = (p: Position) => {
+  private handleCellToggling = (p: IPosition) => {
     const { drawing, colors, currentColorIdx } = this.state;
     const cellColor = drawing[p.y][p.x];
 

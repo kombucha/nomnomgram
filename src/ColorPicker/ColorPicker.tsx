@@ -3,30 +3,24 @@ import ColorButton from "../ColorButton";
 
 import "./ColorPicker.css";
 
-interface Props {
+interface IProps {
   colors: string[];
   onColorSelected: ((color?: string) => void);
   selectedColor: string;
 }
 
-class ColorPicker extends React.PureComponent<Props> {
-  render() {
-    const { colors, selectedColor, onColorSelected } = this.props;
-
-    return (
-      <ul className="ColorPicker">
-        {colors.map(color => (
-          <li key={color} className="ColorPicker__item">
-            <ColorButton
-              color={color}
-              selected={selectedColor === color}
-              onClick={() => onColorSelected(color)}
-            />
-          </li>
-        ))}
-      </ul>
-    );
-  }
-}
+const ColorPicker = ({ colors, selectedColor, onColorSelected }: IProps) => (
+  <ul className="ColorPicker">
+    {colors.map(color => (
+      <li key={color} className="ColorPicker__item">
+        <ColorButton
+          color={color}
+          selected={selectedColor === color}
+          onClick={() => onColorSelected(color)}
+        />
+      </li>
+    ))}
+  </ul>
+);
 
 export default ColorPicker;
