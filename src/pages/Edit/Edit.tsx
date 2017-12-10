@@ -2,7 +2,12 @@ import * as React from "react";
 
 import ColorPicker from "../../common/ColorPicker";
 import Grid from "../../common/Grid";
-import { generateEmptyDrawing, generateGuide } from "../../grid.utils";
+import {
+  generateEmptyDrawing,
+  generateGuide,
+  isDrawingComplete,
+  updateDrawing,
+} from "../../grid.utils";
 import { IGrid, IGuide, IPosition, ISize } from "../../models";
 
 import "./Edit.css";
@@ -44,6 +49,7 @@ class Edit extends React.PureComponent<object, IState> {
   public render() {
     const { grid, selectedSize, currentColorIdx } = this.state;
     const selectedColor = grid.colors[currentColorIdx];
+    const shouldDisableButton = !this.isGridValid(grid);
 
     return (
       <div className="Edit">
@@ -54,6 +60,7 @@ class Edit extends React.PureComponent<object, IState> {
             <input id="name" type="text" value={grid.name} onChange={this.handleNameEdit} />
           </label>
           <label htmlFor="size">
+            <span>Grid size</span>
             <select value={selectedSize} onChange={this.handleSizeChange}>
               {SIZES.map((size, idx) => (
                 <option key={idx} value={idx}>
@@ -67,10 +74,18 @@ class Edit extends React.PureComponent<object, IState> {
             selectedColor={selectedColor}
             onColorSelected={this.handleColorSelected}
           />
+
+          <button disabled={shouldDisableButton} onClick={this.handleCreate}>
+            Create
+          </button>
         </div>
       </div>
     );
   }
+
+  private isGridValid = (grid: IGrid): boolean => {
+    return isDrawingComplete(grid.drawing) && !!grid.name;
+  };
 
   private handleColorSelected = (color: string) => {
     const currentColorIdx = this.state.grid.colors.indexOf(color);
@@ -99,23 +114,16 @@ class Edit extends React.PureComponent<object, IState> {
 
   private handleCellEdit = (p: IPosition) => {
     const { grid, currentColorIdx } = this.state;
-    const cellColor = grid.drawing[p.y][p.x];
 
-    const drawing = grid.drawing.reduce<number[][]>((acc, row, index) => {
-      if (index === p.y) {
-        const updatedRow = row.slice();
-        updatedRow[p.x] = currentColorIdx;
-        acc.push(updatedRow);
-      } else {
-        acc.push(row);
-      }
-      return acc;
-    }, []);
+    const drawing = updateDrawing(grid.drawing, currentColorIdx, p);
     const guide = generateGuide(drawing, grid.colors.length);
-
     const updatedGrid = { ...grid, drawing, guide };
 
     this.setState({ grid: updatedGrid });
+  };
+
+  private handleCreate = () => {
+    console.log("CREATE !");
   };
 }
 

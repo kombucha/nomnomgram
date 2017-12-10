@@ -1,5 +1,7 @@
 import { GuideState, IGuide, IGuideSquare, ISize } from "./models";
+import { IPosition } from "./models/Position";
 
+// Private utils
 function range(start: number, end: number): number[] {
   return Array(end - start)
     .fill(undefined)
@@ -45,6 +47,11 @@ function generateRowGuide(row: number[], colorsNb: number): IGuideSquare[] {
   }));
 }
 
+/**
+ * Transpose a matrix
+ * @param matrix
+ * @returns the transposed matrix
+ */
 export function transpose<T>(matrix: T[][]): T[][] {
   return matrix.reduce(
     (prev: T[][], next: T[]) => next.map((item, i) => (prev[i] || []).concat(next[i])),
@@ -63,4 +70,21 @@ export function generateEmptyDrawing(size: ISize): number[][] {
   return Array(size.height)
     .fill(undefined)
     .map(() => Array(size.width).fill(-1));
+}
+
+export function isDrawingComplete(drawing: number[][]) {
+  return drawing.every(row => row.every(square => square !== -1));
+}
+
+export function updateDrawing(drawing: number[][], colorIdx: number, position: IPosition) {
+  return drawing.reduce<number[][]>((acc, row, index) => {
+    if (index === position.y) {
+      const updatedRow = row.slice();
+      updatedRow[position.x] = colorIdx;
+      acc.push(updatedRow);
+    } else {
+      acc.push(row);
+    }
+    return acc;
+  }, []);
 }
