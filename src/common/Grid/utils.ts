@@ -1,4 +1,4 @@
-import { GuideState, IGuide, IGuideSquare } from "./types";
+import { GuideState, IGuide, IGuideSquare } from "../../models";
 
 function range(start: number, end: number): number[] {
   return Array(end - start)

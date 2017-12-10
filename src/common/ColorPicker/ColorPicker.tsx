@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import ColorButton from "../ColorButton";
 
 import "./ColorPicker.css";

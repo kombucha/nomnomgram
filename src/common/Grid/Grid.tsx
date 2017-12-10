@@ -1,16 +1,15 @@
 import * as classNames from "classnames";
+import { throttle } from "lodash"; // TODO: find import syntax to really import debounce solely...
 import * as React from "react";
 
-import { throttle } from "lodash"; // TODO: find import syntax to really import debounce solely...
-import { IGuide, IGuideSquare, IPosition } from "./types";
+import { IGrid, IGuideSquare, IPosition } from "../../models";
 import { transpose } from "./utils";
 
 import "./Grid.css";
 
 interface IProps {
-  grid: number[][];
-  colors: string[];
-  guide?: IGuide;
+  grid: IGrid;
+  showGuide: boolean;
   onToggleCell?: ((position: IPosition) => void);
 }
 
@@ -25,7 +24,7 @@ class Grid extends React.PureComponent<IProps> {
   }
 
   public render() {
-    const { grid, guide } = this.props;
+    const { grid, showGuide } = this.props;
     return (
       <table
         className="Grid"
@@ -33,9 +32,9 @@ class Grid extends React.PureComponent<IProps> {
         onMouseUp={this.handleMouseUp}
         onMouseMove={this.handleMouseMove}>
         <tbody>
-          {guide && this.renderTopGuide(guide.columns)}
-          {grid.map((line, idx) =>
-            this.renderLine(idx, line, guide ? guide.lines[idx] : undefined)
+          {showGuide && this.renderTopGuide(grid.guide.columns)}
+          {grid.drawing.map((line, idx) =>
+            this.renderLine(idx, line, showGuide ? grid.guide.lines[idx] : undefined)
           )}
         </tbody>
       </table>
@@ -89,7 +88,7 @@ class Grid extends React.PureComponent<IProps> {
 
   private renderTopGuide = (columnGuides: IGuideSquare[][]) => {
     const transposedGuide = transpose(columnGuides);
-    const colorsNb = this.props.colors.length;
+    const colorsNb = this.props.grid.colors.length;
 
     return transposedGuide.map((column, rowIdx) => (
       <tr key={rowIdx}>
@@ -102,7 +101,7 @@ class Grid extends React.PureComponent<IProps> {
   };
 
   private renderGuideSquare = (key: number, square: IGuideSquare, className: string = "") => {
-    const color = this.props.colors[square.colorIndex];
+    const color = this.props.grid.colors[square.colorIndex];
     const colorStyle = { color };
     const squareClass = classNames("Grid__square", "Grid__square--guide", className);
     const countClass = classNames("Grid__count", {
@@ -117,7 +116,7 @@ class Grid extends React.PureComponent<IProps> {
   };
 
   private renderSquare = (position: IPosition, colorIdx: number) => {
-    const color = this.props.colors[colorIdx];
+    const color = this.props.grid.colors[colorIdx];
     const colorStyle = color ? { background: color } : undefined;
 
     return (

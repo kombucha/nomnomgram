@@ -15,8 +15,3 @@ export interface IGuideSquare {
   consecutive: boolean;
   state: GuideState;
 }
-
-export interface IPosition {
-  x: number;
-  y: number;
-}
