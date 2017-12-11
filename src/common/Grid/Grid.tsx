@@ -19,19 +19,19 @@ class Grid extends React.PureComponent<IProps> {
   private lastPosition?: IPosition;
   private mouseDown: boolean = false;
 
+  public componentDidMount() {
+    document.addEventListener("mouseup", this.handleMouseUp);
+  }
+
   public componentWillUnmount() {
+    document.removeEventListener("mouseup", this.handleMouseUp);
     this.throttledToggleHandler.cancel();
   }
 
   public render() {
     const { grid, showGuide } = this.props;
     return (
-      <table
-        className="Grid"
-        onMouseDown={this.handleMouseDown}
-        onMouseLeave={this.handleMouseUp}
-        onMouseUp={this.handleMouseUp}
-        onMouseMove={this.handleMouseMove}>
+      <table className="Grid" onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove}>
         <tbody>
           {showGuide && this.renderTopGuide(grid.guide.columns)}
           {grid.drawing.map((line, idx) =>
