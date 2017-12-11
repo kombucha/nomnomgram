@@ -72,11 +72,22 @@ export function generateEmptyDrawing(size: ISize): number[][] {
     .map(() => Array(size.width).fill(-1));
 }
 
-export function isDrawingComplete(drawing: number[][]) {
+export function isDrawingComplete(drawing: number[][]): boolean {
   return drawing.every(row => row.every(square => square !== -1));
 }
 
-export function updateDrawing(drawing: number[][], colorIdx: number, position: IPosition) {
+/**
+ * Update the drawing grid with a new painted square
+ * @param drawing The drawing
+ * @param colorIdx The paint color index
+ * @param position The square position to paint
+ * @returns the updated drawing
+ */
+export function updateDrawingWithPaint(
+  drawing: number[][],
+  colorIdx: number,
+  position: IPosition
+): number[][] {
   return drawing.reduce<number[][]>((acc, row, index) => {
     if (index === position.y) {
       const updatedRow = row.slice();
@@ -85,6 +96,31 @@ export function updateDrawing(drawing: number[][], colorIdx: number, position: I
     } else {
       acc.push(row);
     }
+    return acc;
+  }, []);
+}
+
+/**
+ * Helper function to update drawing when removing a color from the palette
+ * @param drawing The drawing
+ * @param removedColorIndex
+ * @returns The updated drawing
+ */
+export function updateDrawingWithColorRemoval(
+  drawing: number[][],
+  removedColorIndex: number
+): number[][] {
+  return drawing.reduce<number[][]>((acc, row) => {
+    const newRow = row.map(colorIdx => {
+      if (colorIdx === removedColorIndex) {
+        return -1;
+      } else if (colorIdx > removedColorIndex) {
+        return colorIdx - 1;
+      }
+
+      return colorIdx;
+    });
+    acc.push(newRow);
     return acc;
   }, []);
 }

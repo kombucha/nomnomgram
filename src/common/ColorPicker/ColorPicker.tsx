@@ -6,18 +6,18 @@ import "./ColorPicker.css";
 
 interface IProps {
   colors: string[];
-  onColorSelected: ((color?: string) => void);
-  selectedColor: string;
+  onColorSelected: ((colorIndex: number) => void);
+  selectedColor: number;
 }
 
 const ColorPicker = ({ colors, selectedColor, onColorSelected }: IProps) => (
   <ul className="ColorPicker">
-    {colors.map(color => (
-      <li key={color} className="ColorPicker__item">
+    {colors.map((color, idx) => (
+      <li key={`${idx}-${color}`} className="ColorPicker__item">
         <ColorButton
           color={color}
-          selected={selectedColor === color}
-          onClick={() => onColorSelected(color)}
+          selected={idx === selectedColor}
+          onClick={() => onColorSelected(idx)}
         />
       </li>
     ))}

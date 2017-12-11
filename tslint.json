@@ -4,6 +4,7 @@
     "jsx-no-lambda": false,
     "jsx-no-multiline-js": false,
 
+    "no-unused-variable": true,
     "object-literal-sort-keys": false
   }
 }

@@ -1,14 +1,15 @@
 import * as React from "react";
 
-import ColorPicker from "../../common/ColorPicker";
 import Grid from "../../common/Grid";
 import {
   generateEmptyDrawing,
   generateGuide,
   isDrawingComplete,
-  updateDrawing,
+  updateDrawingWithColorRemoval,
+  updateDrawingWithPaint,
 } from "../../grid.utils";
 import { IGrid, IGuide, IPosition, ISize } from "../../models";
+import ColorEditor from "./ColorEditor";
 
 import "./Edit.css";
 
@@ -22,7 +23,7 @@ const SIZES: ISize[] = [
 interface IState {
   grid: IGrid;
   selectedSize: number;
-  currentColorIdx: number;
+  selectedColor: number;
 }
 
 class Edit extends React.PureComponent<object, IState> {
@@ -43,12 +44,11 @@ class Edit extends React.PureComponent<object, IState> {
       guide,
     };
 
-    this.state = { grid, selectedSize, currentColorIdx: 0 };
+    this.state = { grid, selectedSize, selectedColor: 0 };
   }
 
   public render() {
-    const { grid, selectedSize, currentColorIdx } = this.state;
-    const selectedColor = grid.colors[currentColorIdx];
+    const { grid, selectedSize, selectedColor } = this.state;
     const shouldDisableButton = !this.isGridValid(grid);
 
     return (
@@ -69,10 +69,11 @@ class Edit extends React.PureComponent<object, IState> {
               ))}
             </select>
           </label>
-          <ColorPicker
+          <ColorEditor
             colors={grid.colors}
             selectedColor={selectedColor}
-            onColorSelected={this.handleColorSelected}
+            onColorsChange={this.handleColorsChange}
+            onSelectionChange={this.handleColorSelectionChange}
           />
 
           <button disabled={shouldDisableButton} onClick={this.handleCreate}>
@@ -87,20 +88,31 @@ class Edit extends React.PureComponent<object, IState> {
     return isDrawingComplete(grid.drawing) && !!grid.name;
   };
 
-  private handleColorSelected = (color: string) => {
-    const currentColorIdx = this.state.grid.colors.indexOf(color);
-    this.setState({ currentColorIdx });
-  };
-
   private handleNameEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
     const grid = { ...this.state.grid, name };
     this.setState({ grid });
   };
 
-  private handleColorChange = () => {
-    console.log("color change");
+  private handleColorsChange = (colors: string[]) => {
+    const { grid, selectedColor } = this.state;
+    const isDeletion = colors.length < grid.colors.length;
+    const isAddition = colors.length > grid.colors.length;
+
+    const drawing = isDeletion
+      ? updateDrawingWithColorRemoval(grid.drawing, selectedColor)
+      : grid.drawing;
+    const guide = generateGuide(drawing, colors.length);
+
+    const newGrid = { ...grid, drawing, colors, guide };
+    const newSelectedColor = isDeletion
+      ? Math.max(selectedColor - 1, 0)
+      : isAddition ? colors.length - 1 : selectedColor;
+
+    this.setState({ grid: newGrid, selectedColor: newSelectedColor });
   };
+
+  private handleColorSelectionChange = (selectedColor: number) => this.setState({ selectedColor });
 
   private handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSize = parseInt(e.target.value, 10);
@@ -113,9 +125,9 @@ class Edit extends React.PureComponent<object, IState> {
   };
 
   private handleCellEdit = (p: IPosition) => {
-    const { grid, currentColorIdx } = this.state;
+    const { grid, selectedColor } = this.state;
 
-    const drawing = updateDrawing(grid.drawing, currentColorIdx, p);
+    const drawing = updateDrawingWithPaint(grid.drawing, selectedColor, p);
     const guide = generateGuide(drawing, grid.colors.length);
     const updatedGrid = { ...grid, drawing, guide };
 
